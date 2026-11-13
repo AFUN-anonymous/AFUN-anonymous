@@ -1,0 +1,26 @@
+_target_: datasets.CalvinPreprocess.CalvinPreprocess
+name: calvin
+# 640x640 re-render of task_ABCD_D (tools/calvin_rerender_640.py)
+root: ${paths.data_root}/Calvin/calvin_ABCD_D_640
+
+# Splits to process (training, validation, or both)
+splits:
+  - training
+  - validation
+
+# Absolute path to a .txt file listing episode paths (one per line).
+# Set to null to fall back to dataset-specific discovery logic.
+episode_txt_list: null
+
+# YAML with a `keep_tasks` list; annotations of other tasks are dropped.
+# Relative to the repository root (run from there). null keeps all tasks.
+task_filter: config/dataset/calvin_task_filter.yaml
+
+# Minimum interval duration in seconds (>= 0.5s for motion to be meaningful)
+min_interval_time: 0.5
+
+# Gripper tip offset from flange (metres) — Panda robot
+gripper_offset_m: 0.10
+
+# Whether to extract depth from NPZ files
+extract_depth: true

@@ -1,0 +1,26 @@
+_target_: datasets.RoboMINDPreprocess.RoboMINDPreprocess
+name: robomind
+
+# Root that contains RoboMIND trajectories (<embodiment>/<task>/success_episodes/...).
+root: ${paths.data_root}/RoboMIND/benchmark1_0_compressed/extracted
+
+# RoboMIND reference files used by the loader.
+schema_path: ${paths.data_root}/RoboMIND/x-humanoid-robomind.github.io/static/robomind.yaml
+intrinsics_path: ${paths.data_root}/RoboMIND/x-humanoid-robomind.github.io/static/RoboMIND_intrinsics.md
+
+# Per-step language annotations with frame boundaries.
+# Directory containing JSON files (h5_agilex_3rgb.json, h5_franka_3rgb.json, etc.)
+annotation_json_dir: ${paths.data_root}/RoboMIND/x-humanoid-robomind.github.io/static/language_description_annotation_json
+
+# Absolute path to a .txt file listing trajectory.hdf5 paths (one per line).
+# Set to null to fall back to dataset-specific discovery logic.
+episode_txt_list: null
+
+# RoboMIND trajectories do not expose timestamps, so a fixed FPS is used.
+default_fps: 10.0
+
+# Steps shorter than this are skipped.
+min_interval_time: 0.5
+
+# Whether to decode depth when present in the HDF5.
+extract_depth: true

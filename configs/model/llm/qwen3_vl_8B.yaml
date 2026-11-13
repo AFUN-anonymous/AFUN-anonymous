@@ -1,0 +1,12 @@
+_target_: src.models.llm.qwen_wrapper.QwenWrapper
+model_name: Qwen/Qwen3-VL-8B-Instruct
+llm_cfg:
+  system_prompt: null
+  max_input_text_tokens: 256
+  rms_norm: true
+  skip_lm_head: true
+ft_cfg:
+  num_point_tokens: 0
+  metaquery_cfg:
+    num_metaqueries: 32
+    metaquery_types: [semantic, motion]

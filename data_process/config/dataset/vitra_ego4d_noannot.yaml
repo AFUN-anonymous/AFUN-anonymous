@@ -1,0 +1,31 @@
+_target_: datasets.VITRAPreprocess.VITRAPreprocess
+name: vitra_ego4d_noannot
+
+# VITRA-1M annotation root
+root: ${paths.data_root}/VITRA-1M
+
+# Ego4D source videos ({video_root}/{video_uid}.mp4)
+video_root: ${paths.data_root}/Ego4D/v2/full_scale
+
+# Only Ego4D subsets
+subsets:
+  - ego4d_cooking_and_cleaning
+  - ego4d_other
+
+fps: 30.0
+min_interval_frames: 5
+tip_joint: 8  # MANO index fingertip
+
+# Ego4D episodes without an fho_main contact annotation:
+# - no contact index, so contact_frame = obs_frame = first frame;
+# - write_query_aux_frames also saves the middle and end frames of each
+#   interval (query_aux_frame_mid.png / query_aux_frame_end.png) for the
+#   3-frame query-generation prompt (sam3_query_gen_egonoannot).
+ego4d_contact_index: null
+write_query_aux_frames: true
+
+# Depth is computed in mainprocess (sam3_mask_traj_depth, DA3 video depth).
+
+# Episodes that are not in ego4d_contact_index_full.json and have a local Ego4D
+# video. Built by tools/build_vitra_ego4d_noannot_list.py.
+episode_txt_list: ${paths.data_root}/VITRA-1M/ego4d_noannot_episodes.txt

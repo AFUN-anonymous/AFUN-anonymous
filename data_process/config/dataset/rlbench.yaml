@@ -1,0 +1,23 @@
+_target_: datasets.RLBenchPreprocess.RLBenchPreprocess
+name: rlbench
+# 18 PerAct tasks rendered at 512x512 (tools/generate_rlbench_512.sh); all tasks under data/{split}/
+root: ${paths.data_root}/RLBench_512
+
+# Train/test split
+split: train
+
+# Static cameras to use (wrist is arm-mounted, excluded)
+cameras:
+  - left_shoulder
+  - right_shoulder
+  - overhead
+  - front
+
+# Absolute path to a .txt file listing episode paths (one per line).
+episode_txt_list: null
+
+# Minimum interval duration in seconds
+min_interval_time: 0.3
+
+# Gripper tip offset from flange (metres) — Panda robot
+gripper_offset_m: 0.1034

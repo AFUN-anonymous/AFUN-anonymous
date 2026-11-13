@@ -1,0 +1,16 @@
+defaults:
+  - dataset: droid
+  - paths: default
+  - _self_
+
+output_root: ${paths.output_root}
+
+multi_processing: true
+num_processes: 20
+
+# Max number of episodes to process (null = no limit).
+limit: null
+
+# Skip an episode when its output dir already has episode_summary.json (and,
+# with write_query_aux_frames, the aux frames). Makes reruns resume.
+skip_existing: true

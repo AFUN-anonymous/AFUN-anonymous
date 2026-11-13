@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.cover
+.mypy_cache/
+.ruff_cache/
+
+# Distribution / packaging
+build/
+dist/
+*.egg
+.eggs/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+
+# Demo output (do NOT track; users generate locally)
+outputs/
+
+# Misc cache
+.hydra/
+multirun/
+
+# Local Claude Code session settings and memory
+.claude/
+.remember/
+archive/
+
+# Large model weights — kept on disk, not in git (too big to push)
+checkpoints/
+*.pt
+# Local datasets and environments (repo root only: src/data/ and configs/data/ are code)
+/data/
+/.venv/
+wandb/
+
+# Local papers, notes and logs: never publish
+*.pdf
+*.log
+nohup.out
+slurm-*.out
+.env
+RETRAINING_FIXES.md
+eval_3d/
+.ipynb_checkpoints/
+*.swp
+*.swo
+*~

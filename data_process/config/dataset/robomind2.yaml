@@ -1,0 +1,20 @@
+_target_: datasets.RoboMIND2Preprocess.RoboMIND2Preprocess
+name: robomind2
+
+# Top-level RoboMIND2 root. The adapter dispatches by first path component
+# (1/2/3 -> franka, Ark -> ark, Tienkung -> tienkung, UR5 -> ur5). Keep it at the
+# top level: mainprocess resolves raw HDF5 paths relative to this root.
+root: ${paths.data_root}/RoboMIND2
+
+# Absolute path to a .txt file listing trajectory.hdf5 paths (one per line).
+# Set to null to fall back to dataset-specific discovery logic.
+episode_txt_list: null
+
+# FPS fallback when timestamps are unavailable or degenerate.
+default_fps: 30.0
+
+# Minimum gripper-closed interval length (seconds). Thresholds are per family (see adapter).
+min_interval_time: 0.5
+
+# Whether to decode depth from the HDF5.
+extract_depth: true

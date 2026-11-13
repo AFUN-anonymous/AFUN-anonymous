@@ -1,0 +1,18 @@
+_target_: datasets.AgiBotPreprocess.AgiBotPreprocess
+name: agibot
+
+# AgiBot World Beta, pre-cut into action clips: {clip_root}/{clip_name}/head/{rgb.mp4,caption.pickle}
+clip_root: ${paths.data_root}/AgiBot/clips
+
+# Camera parameters, {root}/{task_id}/{episode_id}/parameters/camera/ (roots checked in order)
+param_roots:
+  - ${paths.data_root}/AgiBot/parameters
+
+# Clips kept by the skill filter (JSON list of clip folder names; paths are relative to the repo root)
+matched_clips: config/dataset/agibot_clips.json
+
+# Absolute path to a .txt file listing episode paths (one per line).
+# Set to null to fall back to dataset-specific discovery logic.
+episode_txt_list: null
+
+# Depth is not read in preprocess; mainprocess runs DA3 video depth (sam3_mask_traj_depth).

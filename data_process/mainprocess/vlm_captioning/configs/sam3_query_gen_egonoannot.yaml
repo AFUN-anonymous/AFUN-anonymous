@@ -1,0 +1,42 @@
+# VLM config for SAM3 query generation, egocentric video without a contact
+# frame (vitra_ego4d_noannot). Uses the 3-image prompt in
+# tasks/sam3_query_gen_egonoannot.py (frame_start, frame_mid, frame_end).
+#
+# Usage:
+#   python mainprocess.py stage=query_gen_vllm dataset_name=vitra_ego4d_noannot \
+#       vlm.config_path=mainprocess/vlm_captioning/configs/sam3_query_gen_egonoannot.yaml
+
+# ---- Model ----
+model:
+  model_name_or_path: "Qwen/Qwen3.5-35B-A3B-FP8"
+  dtype: "auto"
+  quantization: null
+  trust_remote_code: true
+
+# ---- vLLM Engine ----
+engine:
+  tensor_parallel_size: 4
+  pipeline_parallel_size: 1
+  gpu_memory_utilization: 0.8
+  # 3 images per prompt: about twice the 2-image VITRA budget.
+  max_model_len: 32768
+  max_num_seqs: 128
+  enforce_eager: true
+  allowed_local_media_path: "/"
+  seed: 42
+  limit_mm_per_prompt:
+    image: 4
+  extra_kwargs: {}
+
+# ---- Generation / Sampling ----
+generation:
+  max_new_tokens: 512
+  temperature: 0.2
+  top_p: 0.95
+  top_k: -1
+  repetition_penalty: 1.0
+  stop: null
+  enable_thinking: false
+
+# ---- Pipeline ----
+prompt_template: "sam3_query_gen_ego_noannot"

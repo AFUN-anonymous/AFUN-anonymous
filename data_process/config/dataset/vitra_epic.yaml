@@ -1,0 +1,22 @@
+_target_: datasets.VITRAPreprocess.VITRAPreprocess
+name: vitra_epic
+
+# VITRA-1M annotation root (epic subset only)
+root: ${paths.data_root}/VITRA-1M
+
+# EPIC-KITCHENS source videos (layout: {video_root}/P{XX}/videos/P{XX}_{YY}.MP4)
+video_root: ${paths.data_root}/EPIC-KITCHENS
+
+subsets:
+  - epic
+
+# EPIC-KITCHENS records at 59.94 fps (not 30).
+fps: 59.94
+min_interval_frames: 5
+tip_joint: 8  # MANO index fingertip
+
+# EPIC hand-object contact index (tools/build_vitra_epic_contact_index.py).
+# Episodes without a contact match are skipped.
+epic_contact_index: ${paths.data_root}/VITRA-1M/vitra_epic_contact_index.json
+
+episode_txt_list: null

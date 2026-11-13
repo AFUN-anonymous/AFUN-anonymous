@@ -1,0 +1,25 @@
+_target_: datasets.VITRAPreprocess.VITRAPreprocess
+name: vitra_ego4d
+
+# VITRA-1M annotation root
+root: ${paths.data_root}/VITRA-1M
+
+# Ego4D source videos ({video_root}/{video_uid}.mp4)
+video_root: ${paths.data_root}/Ego4D/v2/full_scale
+
+# Only Ego4D subsets
+subsets:
+  - ego4d_cooking_and_cleaning
+  - ego4d_other
+
+fps: 30.0
+min_interval_frames: 5
+tip_joint: 8  # MANO index fingertip
+
+# Ego4D fho_main contact frame index (tools/build_vitra_ego4d_contact_index.py).
+# Only indexed episodes are processed.
+ego4d_contact_index: ${paths.data_root}/VITRA-1M/ego4d_contact_index_full.json
+
+# Depth is computed in mainprocess (sam3_mask_traj_depth, DA3 video depth).
+
+episode_txt_list: null

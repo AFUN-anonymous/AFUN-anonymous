@@ -1,0 +1,6 @@
+__pycache__/
+*.py[cod]
+*.log
+outputs/
+query_gen_cache/
+extern/Depth-Anything-3/

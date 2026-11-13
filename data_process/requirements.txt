@@ -1,0 +1,20 @@
+# Versions of the environment that produced the AFUN data (Python 3.11).
+# SAM3 (facebook/sam3) and Depth Anything 3 are installed from source.
+torch==2.10.0
+vllm==0.17.1
+transformers==4.57.1
+hydra-core==1.3.2
+omegaconf==2.3.0
+numpy==1.26.4
+scipy==1.16.0
+opencv-python==4.11.0.86
+pillow==12.2.0
+h5py==3.14.0
+av==16.1.0
+ray==2.48.0
+tqdm==4.67.1
+plyfile==1.1.2
+imageio==2.37.4
+transforms3d==0.4.2  # vendored RH20T API (datasets/extern/rh20t_api)
+# SceneFun3D depth refinement: lingbot-depth (github.com/robbyant/lingbot-depth @ ff29de5, package `mdm`).
+# DROID only: ZED SDK Python bindings (pyzed 5.1), installed with the ZED SDK.

@@ -1,0 +1,38 @@
+# CALVIN task filter: only annotations of these tasks are kept (read by
+# CalvinPreprocess and tools/calvin_rerender_640.py via `keep_tasks`).
+#
+# Kept task types:
+#   move_door_rel     open/close drawer, move slider left/right  (4 tasks)
+#   toggle_light      turn on/off lightbulb, turn on/off LED     (4 tasks)
+#   place_object      place in drawer, place in slider            (2 tasks)
+#   push_object       push {red,blue,pink} block {left,right}    (6 tasks)
+#   push_object_into  push into drawer                           (1 task)
+# Excluded:
+#   lift_object (9 tasks)     simple pick-up, no interesting contact trajectory
+#   rotate_object (6 tasks)   in-hand rotation
+#   stack_objects (1 task)    stacking
+#   unstack_objects (1 task)  unstacking
+
+keep_tasks:
+  # move_door_rel
+  - open_drawer
+  - close_drawer
+  - move_slider_left
+  - move_slider_right
+  # toggle_light
+  - turn_on_lightbulb
+  - turn_off_lightbulb
+  - turn_on_led
+  - turn_off_led
+  # place_object
+  - place_in_drawer
+  - place_in_slider
+  # push_object
+  - push_red_block_right
+  - push_red_block_left
+  - push_blue_block_right
+  - push_blue_block_left
+  - push_pink_block_right
+  - push_pink_block_left
+  # push_object_into
+  - push_into_drawer

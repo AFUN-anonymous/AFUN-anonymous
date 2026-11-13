@@ -1,0 +1,22 @@
+_target_:  datasets.RH20TPreprocess.RH20TPreprocess
+name: rh20t_human
+root:  ${paths.data_root}/RH20T/
+# English task names to keep (one per line), matched against task_description.json
+task_txt_path: config/dataset/rh20t_tasks.txt
+# Image size that intrinsics are rescaled to
+image_width: 640
+image_height: 360
+
+# Human-demonstration scenes only; one interval per scene, no robot trajectory.
+human_only: true
+
+subset:
+  - RH20T_cfg2
+  - RH20T_cfg1
+  - RH20T_cfg3
+  - RH20T_cfg4
+  - RH20T_cfg5
+  - RH20T_cfg7
+
+episode_txt_list: null
+extract_depth: true

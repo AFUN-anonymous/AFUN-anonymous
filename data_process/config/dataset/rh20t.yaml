@@ -1,0 +1,26 @@
+_target_:  datasets.RH20TPreprocess.RH20TPreprocess
+name: rh20t
+root:  ${paths.data_root}/RH20T/
+# English task names to keep (one per line), matched against task_description.json
+task_txt_path: config/dataset/rh20t_tasks.txt
+# Image size that intrinsics are rescaled to for projection
+image_width: 640
+image_height: 360
+
+subset:
+  - RH20T_cfg2
+  - RH20T_cfg1
+  - RH20T_cfg3
+  - RH20T_cfg4
+  - RH20T_cfg5
+  - RH20T_cfg7
+# Absolute path to a .txt file listing episode paths (one per line).
+# Set to null to fall back to dataset-specific discovery logic.
+episode_txt_list: null
+
+# Gripper-closed interval detection
+gripper_threshold: 0.2  # fraction of the command range (min + 0.2 * (max - min))
+min_interval_time: 0.5  # in second. >= 0.5s for motion to work. Other wise the 3D motion will be too short to be meaningful.
+
+# Whether to read the depth PNGs
+extract_depth: true

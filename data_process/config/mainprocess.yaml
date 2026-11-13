@@ -1,0 +1,60 @@
+defaults:
+  - paths: default
+  - _self_
+
+output_root: ${paths.output_root}
+
+# ---- mainprocess.py ----
+# query_gen_vllm | sam3_best_frame_track_concurrent | sam3_mask_traj | sam3_mask_traj_depth
+stage: null          # null = default pipeline (see mainprocess.py)
+dataset_name: droid  # directory under output_root; null = every dataset directory
+
+skip_existing: false
+limit: null          # max episodes / work items (null = all)
+shuffle: false       # shuffle work items before processing
+seed: 42             # RNG seed for shuffle
+
+# ---- 01 query_gen_vllm ----
+vlm:
+  # VLM config under mainprocess/vlm_captioning/configs/ (model, engine, prompt template).
+  config_path: mainprocess/vlm_captioning/configs/sam3_query_gen.yaml
+  batch_size: 512      # micro-batch size; null = all requests at once
+  manifest_path: null  # query_gen manifest; null = utils.QUERY_GEN_MANIFEST_PATH
+
+# ---- 02.5 sam3_best_frame_track_concurrent ----
+sam3_best_frame_track:
+  num_processes: 1                # Ray actors per GPU
+  concurrent_videos: 6            # videos tracked concurrently per actor
+  confidence_threshold: 0.1
+  score_threshold_detection: 0.1
+  scan_stride: 5                  # best-frame scan: every N-th frame
+  temp_frame_root: null           # null = {output_root}/_sam3_video_track_tmp
+  jpeg_quality: 95
+  qg_manifest_path: null          # query_gen manifest; null = utils.QUERY_GEN_MANIFEST_PATH
+
+# ---- 04 sam3_mask_traj (sensor depth) ----
+sam3_mask_traj:
+  min_start_end_dist_3d_m: 0.02
+  min_start_end_dist_2d_px: 15
+  multi_processing: true
+  num_processes: 20
+
+# ---- 04 sam3_mask_traj_depth (DA3-Streaming video depth) ----
+sam3_mask_traj_depth:
+  depth_stride: 4             # depth on every N-th frame (30 fps -> 7.5 fps)
+  # Launch N copies with num_shards=N and shard_idx=0..N-1 (one GPU each);
+  # copy i processes cam dirs with index % num_shards == shard_idx.
+  num_shards: 1
+  shard_idx: 0
+  num_workers: 2              # cam dirs processed in parallel per copy (one DA3 model each)
+  # Stricter than sam3_mask_traj: monocular depth (and moving cameras) are noisier.
+  min_start_end_dist_3d_m: 0.10
+  min_start_end_dist_2d_px: 40
+
+depth_prediction:
+  video:
+    # Local directory with model.safetensors + config.json of
+    # depth-anything/DA3NESTED-GIANT-LARGE-1.1, e.g.
+    #   huggingface-cli download depth-anything/DA3NESTED-GIANT-LARGE-1.1 --local-dir <dir>
+    model: /path/to/DA3NESTED-GIANT-LARGE-1.1
+    chunk_size: 120           # stage 04 uses max(n_frames + 1, chunk_size), i.e. one chunk

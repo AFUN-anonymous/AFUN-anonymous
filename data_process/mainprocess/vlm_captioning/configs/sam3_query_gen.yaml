@@ -1,0 +1,39 @@
+# VLM config for SAM3 query generation (default; robot datasets).
+#
+# Usage:
+#   python mainprocess.py stage=query_gen_vllm dataset_name=droid \
+#       vlm.config_path=mainprocess/vlm_captioning/configs/sam3_query_gen.yaml
+
+# ---- Model ----
+model:
+  model_name_or_path: "Qwen/Qwen3.5-35B-A3B-FP8"
+  dtype: "auto"                   # "auto", "float16", "bfloat16"
+  quantization: null
+  trust_remote_code: true
+
+# ---- vLLM Engine ----
+engine:
+  tensor_parallel_size: 1         # <= 0: use all visible GPUs
+  pipeline_parallel_size: 1
+  gpu_memory_utilization: 0.90
+  max_model_len: 8192             # system + user text + 2 images + 512 output tokens
+  max_num_seqs: 128
+  enforce_eager: true             # avoids torch.compile/inductor issues
+  allowed_local_media_path: "/"
+  seed: 42
+  limit_mm_per_prompt:
+    image: 4                      # max images per prompt (this task uses 2)
+  extra_kwargs: {}                # forwarded verbatim to vllm.LLM()
+
+# ---- Generation / Sampling ----
+generation:
+  max_new_tokens: 512
+  temperature: 0.2
+  top_p: 0.95
+  top_k: -1
+  repetition_penalty: 1.0
+  stop: null
+  enable_thinking: false          # Qwen thinking mode off
+
+# ---- Pipeline ----
+prompt_template: "sam3_query_gen"

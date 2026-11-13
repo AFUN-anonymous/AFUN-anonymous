@@ -1,0 +1,23 @@
+# AFUN inference config — used by demo.py and run_examples.py.
+#
+# Sonata (PointTransformerV3) depth encoder + spline motion head: the
+# architecture of the provided afun.pt checkpoint. Inference builds only the
+# model, so neither the data nor the trainer group is composed here.
+
+defaults:
+  - model/decoder@decoder: sam3_decoder_sonata_geo
+  - model/llm@llm: qwen3_vl_8B
+  - override model/decoder/motion@decoder.motion_processor: spline_processor
+  - _self_
+
+decoder:
+  predict_motion: true
+  motion_processor:
+    model_cfg:
+      num_layers: 4
+  model_cfg:
+    freeze_sam: true
+    confidence_threshold: 0.0   # keep every detection; demo.py filters for display
+    sam_loss_weight: 0.01
+
+rms_norm: false

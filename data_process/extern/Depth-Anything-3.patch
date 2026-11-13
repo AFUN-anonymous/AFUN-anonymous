@@ -1,0 +1,110 @@
+diff --git a/da3_streaming/__init__.py b/da3_streaming/__init__.py
+new file mode 100644
+index 0000000..e69de29
+diff --git a/da3_streaming/loop_utils/alignment_triton.py b/da3_streaming/loop_utils/alignment_triton.py
+index 0d266b8..ac3c3f3 100644
+--- a/da3_streaming/loop_utils/alignment_triton.py
++++ b/da3_streaming/loop_utils/alignment_triton.py
+@@ -16,8 +16,12 @@
+ 
+ import numpy as np
+ import torch
+-import triton
+-import triton.language as tl
++try:
++    import triton
++    import triton.language as tl
++except ImportError:
++    triton = None
++    tl = None
+ 
+ 
+ @triton.jit
+diff --git a/da3_streaming/loop_utils/loop_detector.py b/da3_streaming/loop_utils/loop_detector.py
+index 03bf4bc..be3416d 100644
+--- a/da3_streaming/loop_utils/loop_detector.py
++++ b/da3_streaming/loop_utils/loop_detector.py
+@@ -18,7 +18,10 @@ import argparse
+ import os
+ import sys
+ from pathlib import Path
+-import faiss
++try:
++    import faiss
++except ImportError:
++    faiss = None
+ import torch
+ import torchvision.transforms as T
+ from PIL import Image
+@@ -29,7 +32,10 @@ CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+ SALAD_ROOT = os.path.join(CURRENT_DIR, "salad")
+ if SALAD_ROOT not in sys.path:
+     sys.path.insert(0, SALAD_ROOT)
+-from loop_utils.salad.models import helper
++try:
++    from loop_utils.salad.models import helper
++except ImportError:
++    helper = None
+ 
+ 
+ class VPRModel(nn.Module):
+diff --git a/da3_streaming/loop_utils/sim3loop.py b/da3_streaming/loop_utils/sim3loop.py
+index ccf51e4..85eb067 100644
+--- a/da3_streaming/loop_utils/sim3loop.py
++++ b/da3_streaming/loop_utils/sim3loop.py
+@@ -14,12 +14,20 @@
+ #
+ # Adapted from [VGGT-Long](https://github.com/DengKaiCQ/VGGT-Long)
+ 
++from __future__ import annotations
++
+ import time
+ from typing import List, Tuple
+ import numpy as np
+-import pypose as pp
++try:
++    import pypose as pp
++except ImportError:
++    pp = None
+ import torch
+-from fastloop.solve_python import solve_system_py
++try:
++    from fastloop.solve_python import solve_system_py
++except ImportError:
++    solve_system_py = None
+ from scipy.spatial.transform import Rotation as R
+ 
+ cpp_version = False
+diff --git a/da3_streaming/loop_utils/sim3utils.py b/da3_streaming/loop_utils/sim3utils.py
+index 7b4d70f..2293d41 100644
+--- a/da3_streaming/loop_utils/sim3utils.py
++++ b/da3_streaming/loop_utils/sim3utils.py
+@@ -18,10 +18,25 @@ import bisect
+ import glob
+ import os
+ import numpy as np
+-import trimesh
++try:
++    import trimesh
++except ImportError:
++    trimesh = None
+ from loop_utils.alignment_torch import robust_weighted_estimate_sim3_torch
+-from loop_utils.alignment_triton import robust_weighted_estimate_sim3_triton
+-from numba import njit
++try:
++    from loop_utils.alignment_triton import robust_weighted_estimate_sim3_triton
++except ImportError:
++    robust_weighted_estimate_sim3_triton = None
++try:
++    from numba import njit
++except ImportError:
++    # Provide a no-op decorator so function definitions still work
++    def njit(*args, **kwargs):
++        def decorator(fn):
++            return fn
++        if len(args) == 1 and callable(args[0]):
++            return args[0]
++        return decorator
+ from sklearn.linear_model import LinearRegression, RANSACRegressor
+ 
+ 

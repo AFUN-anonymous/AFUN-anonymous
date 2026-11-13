@@ -1,0 +1,2 @@
+data_root: /path/to/your/data_root      # base directory containing all raw datasets
+output_root: /path/to/your/output_root  # base directory for preprocess/mainprocess outputs

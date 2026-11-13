@@ -1,0 +1,41 @@
+# configs/model/decoder/sam3_decoder.yaml
+_target_: src.models.decoder.sam3_decoder.Sam3Decoder
+freeze: false
+training: true
+# Optional: checkpoint containing the Qwen->SAM3 projector (same style as qwen_to_sam_metaquery.py).
+# If null, you must set `model_cfg.projector_in_dim`.
+ckpt_path: null
+
+predict_motion: false
+defaults:
+  - _self_
+  # group: motion/, option: <name>.yaml, packaged under the key "motion_processor"
+  - motion@motion_processor: spline_processor
+
+# Depth geo encoder for depth-aware motion prediction. Null here (no depth
+# conditioning); `sam3_decoder_sonata_geo.yaml` swaps in the Sonata encoder,
+# which is what AFUN actually uses.
+depth_encoder: null
+
+model_cfg:
+  freeze_sam: true
+  device: cuda
+  # Projector dims: only needed when ckpt_path is null
+  projector_in_dim: 4096
+  projector_out_dim: 256
+
+  # SAM3 loading
+  sam3_checkpoint_path: null
+  sam3_load_from_hf: true
+  enable_segmentation: true
+  enable_inst_interactivity: false
+  compile: false
+
+  # Output behavior
+  return_dict: true          # default: return (B,1,H,W) logits tensor
+  confidence_threshold: 0.5
+  metric_keys: ["miou_semantic_seg", "presence_acc", "ce_f1", "presence_dec_acc", "motion_loss", "sam3_loss"]
+
+# Training loss — null for inference (never computed without targets; avoids the
+# sam3.train.loss chain and its torchmetrics dependency).
+loss: null

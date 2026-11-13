@@ -1,0 +1,18 @@
+_target_:  datasets.DroidPreprocess.DroidPreprocess
+name: droid
+root: ${paths.data_root}/droid_raw/1.0.1
+patch_root: ${paths.data_root}/droid/droid_annotation_patch
+
+# Optional .txt file listing episode paths (one per line) to restrict
+# processing to a subset. null = all episodes in the annotation patch.
+episode_txt_list: null
+
+# Gripper-closed interval detection
+gripper_threshold: 0.5
+min_interval_time: 0.5  # in second. >= 0.5s for motion to work. Other wise the 3D motion will be too short to be meaningful.
+
+# Gripper tip offset from flange (metres)
+gripper_offset_m: 0.15
+
+# Whether to extract depth from SVO files
+extract_depth: true
