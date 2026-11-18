@@ -45,7 +45,7 @@ command from the repository root.
 | `scenefun3d_process/` | SceneFun3D custom path: frame selection, mask-to-motion pairing, curve fit, LingBot depth |
 | `mainprocess.py`, `mainprocess/` | Stages 01–04; `vlm_captioning/` holds the vLLM backend and query-generation prompts |
 | `curve_fit/` | Constant-curvature fit → `fsparams` and Bézier `spline_params` in `trajectory.json` |
-| `tools/` | Source-specific inputs (contact indexes, re-renders) and `export_dataset.py` |
+| `tools/` | Source-specific inputs (contact indexes, re-renders), `build_review.py` (manual review pages) and `export_dataset.py` |
 | `config/` | Hydra configs; `config/dataset/` also holds the shipped selection lists |
 | `runs/` | The exact command sequence used per source |
 
@@ -92,6 +92,26 @@ python tools/export_dataset.py {output_root} {out_dir} [--datasets ...] [--keep-
 
 Every stage writes `{output_root}/<stage>_manifest.json` and resumes with `skip_existing=true`.
 Query-generation manifests are written to `query_gen_cache/`. The released AFUN training set is
-the subset kept by manual review: pass those sample ids with `--keep-list`.
+the subset kept by manual review (below).
 
 Conventions: depth maps in millimetres, 3D positions in metres, extrinsics as `T_base_to_cam`.
+
+## Manual review
+
+<p align="center"><img src="../assets/annotator.png" width="70%"></p>
+
+```bash
+python tools/build_review.py {output_root} review_pages [--datasets droid calvin]
+cd review_pages && python -m http.server 8000 --bind 127.0.0.1   # open http://localhost:8000
+```
+
+Each page shows the task, the observation with the mask, the tracked motion (yellow), the fitted
+Bézier curve (green) and a 3D view of the scene. Press `space` or `y` to keep a sample and `n` to
+discard it; `j`/`k` move between samples and `s` jumps to the next undecided one. Decisions are saved
+in the browser and shared by all pages. **Export** and **Import** move them between browsers.
+
+**Keep list** downloads the kept sample ids for the final export:
+
+```bash
+python tools/export_dataset.py {output_root} {out_dir} --keep-list keep_list.txt
+```
